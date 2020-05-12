@@ -25,7 +25,7 @@ public class UnsplashClient {
         ]
     }
 
-    private let client: HTTPClient
+    internal let client: HTTPClient
 
     public init(accessKey: String) {
         self.accessKey = accessKey
@@ -62,6 +62,19 @@ internal extension  UnsplashClient {
 // MARK: - Requests
 
 public extension UnsplashClient {
+
+    func getPhotoDataFrom(photo: PhotoModel, resolution: PhotoModel.Resolution = .regular) -> EventLoopFuture<Data> {
+        let url = photo.urlFor(resolution: resolution)
+
+        guard let request = try? HTTPClient.Request(url: url) else {
+            return client.eventLoopGroup.next().makeFailedFuture(UnsplashClientError.invalidRequest)
+        }
+
+        return client.execute(request: request).flatMapThrowing { response -> Data in
+            guard let imageData = response.bodyData else { throw UnsplashClientError.failedToReadBody }
+            return imageData
+        }
+    }
 
     /// Gets the lastest 10 images
     /// - Returns: EventLoopFuture<[PhotoModel]>

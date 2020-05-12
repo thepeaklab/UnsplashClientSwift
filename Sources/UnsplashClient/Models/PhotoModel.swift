@@ -33,6 +33,20 @@ public struct PhotoModel: Codable {
     public let urls: PhotoURL
     public let links: PhotoLinks
 
+    public enum Resolution {
+        case raw, full, regular, small, thumbnail
+    }
+
+    func urlFor(resolution: Resolution) -> String {
+        switch resolution {
+        case .raw:       return urls.raw
+        case .full:      return urls.full
+        case .regular:   return urls.regular
+        case .small:     return urls.small
+        case .thumbnail: return urls.thumbnail
+        }
+    }
+
 }
 
 

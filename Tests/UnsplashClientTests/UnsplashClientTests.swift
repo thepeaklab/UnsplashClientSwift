@@ -49,13 +49,15 @@ final class UnsplashClientTests: XCTestCase {
     }
 
     func testGetImageForIdentifier() {
-        let client = UnsplashClient(accessKey: "p6w4GrAA2CubxUF44ROf7bUHSNLb5HHfowBqOKlGNIc")
-
         let image = try? client.getPhotoFor(id: "sgLArb_GGO0").wait()
-        print(image)
         XCTAssertNotNil(image)
     }
 
+    func testGetImageData() {
+        let randomPhoto = try? client.getRandomPhoto().wait()
+        let imageData = try? client.getPhotoDataFrom(photo: randomPhoto!, resolution: .regular).wait()
+        XCTAssertNotNil(imageData)
+    }
 
     static var allTests = [
         ("testGetRandomImage", testGetRandomImage),
@@ -63,5 +65,5 @@ final class UnsplashClientTests: XCTestCase {
         ("testSearchForImagesByKeyword", testSearchForImagesByKeyword),
         ("testGetImageForIdentifier", testGetImageForIdentifier)
     ]
-    
+
 }
